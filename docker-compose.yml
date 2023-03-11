@@ -1,0 +1,20 @@
+version: '2.4'
+
+services:
+  samba:
+    container_name: samba
+    build:
+      context: .
+    restart: unless-stopped
+    volumes:
+      - ./data:/data
+      - ./home:/home
+    environment:
+      - SAMBA_USER=bob
+      - SAMBA_PASS=123456
+    ports:
+      - 445:445/tcp
+    healthcheck:
+      test: smbclient -L '\\127.0.0.1' -U '%' -m SMB3 >/dev/null
+      interval: 1m
+      timeout: 15s
