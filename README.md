@@ -33,10 +33,11 @@ To use *docker-samba*, follow these steps:
 The image is configured using environment variables passed at runtime. All these
 variables are prefixed by `SAMBA_`.
 
-| Variable | Function                          | Required |
-| :------- | :-------------------------------- | -------- |
-| `USER`   | Name of user to access the shares | Y        |
-| `PASS`   | Password of user                  | Y        |
+| Variable | Function                                   | Required |
+| :------- | :----------------------------------------- | -------- |
+| `USER`   | Username of Samba user (default `smbuser`) | N        |
+| `PASS`   | Password of Samba user                     | N        |
+| `UID`    | UID of Samba user                          | N        |
 
 
 #### Custom `smb.conf`
