@@ -17,4 +17,4 @@ HEALTHCHECK --interval=1m --timeout=15s \
   CMD smbclient -L '\\127.0.0.1' -U '%' -m SMB3 >/dev/null
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["--foreground", "--log-stdout", "--no-process-group", "--debuglevel=1"]
+CMD ["--foreground", "--debug-stdout", "--no-process-group", "--debuglevel=1"]
