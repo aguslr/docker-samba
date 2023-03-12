@@ -7,11 +7,11 @@ services:
       context: .
     restart: unless-stopped
     volumes:
-      - ./data:/data
       - ./home:/home
     environment:
       - SAMBA_USER=bob
       - SAMBA_PASS=123456
+      - SAMBA_UID=1000
     ports:
       - 445:445/tcp
     healthcheck:
