@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Create Samba user
-if [ "${SAMBA_USER:=smbuser}" ] && ! grep -s "^${SAMBA_USER}" /etc/passwd; then
+if [ "${SAMBA_USER:=smbuser}" ] && ! grep -q -s "^${SAMBA_USER}" /etc/passwd; then
 	# Generate random password
 	[ -z "${SAMBA_PASS}" ] && \
 		SAMBA_PASS=$(date +%s | sha256sum | base64 | head -c 32) && gen_pass=1
