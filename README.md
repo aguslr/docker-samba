@@ -1,7 +1,7 @@
 [aguslr/docker-samba][1]
 ========================
 
-[![publish-docker-image](https://github.com/aguslr/docker-samba/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/aguslr/docker-samba/actions/workflows/docker-publish.yml) [![docker-pulls](https://img.shields.io/docker/pulls/aguslr/samba)](https://hub.docker.com/r/aguslr/samba) [![image-size](https://img.shields.io/docker/image-size/aguslr/samba/latest)](https://hub.docker.com/r/aguslr/samba)
+[![docker-pulls](https://img.shields.io/docker/pulls/aguslr/samba)](https://hub.docker.com/r/aguslr/samba) [![image-size](https://img.shields.io/docker/image-size/aguslr/samba/latest)](https://hub.docker.com/r/aguslr/samba)
 
 
 This *Docker* image sets up *Samba* inside a docker container.
