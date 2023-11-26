@@ -1,7 +1,19 @@
 #!/bin/sh
 
-# Create Samba user
-if [ "${SAMBA_USER:=smbuser}" ] && ! grep -q -s "^${SAMBA_USER}" /etc/passwd; then
+# Create Samba users
+if [ -f "${SAMBA_PASSWDFILE}" ]; then
+	# Read password file line by line
+	while read -r line; do
+		# Parse line for user information
+		printf '%s' "${line}" | grep -v '^\s*#' | \
+			while IFS=':' read -r name uid lanman nt flags mtime; do
+			# Add user to system
+			adduser --shell /sbin/nologin --uid "${uid}" --no-create-home --disabled-password "${name}"
+		done
+	done < "${SAMBA_PASSWDFILE}"
+	# Import password file
+	pdbedit -i smbpasswd:"${SAMBA_PASSWDFILE}"
+elif [ "${SAMBA_USER}" ] && ! grep -q -s "^${SAMBA_USER}" /etc/passwd; then
 	# Generate random password
 	[ -z "${SAMBA_PASS}" ] && \
 		SAMBA_PASS=$(date +%s | sha256sum | base64 | head -c 32) && gen_pass=1
