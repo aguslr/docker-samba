@@ -1,14 +1,28 @@
 #!/bin/sh
 
 # Create Samba users
-if [ -f "${SAMBA_PASSWDFILE}" ]; then
+if [ -f "${SAMBA_USERSFILE}" ]; then
+	# Read users file line by line
+	while read -r line; do
+		# Parse line for user information
+		printf '%s' "${line}" | grep -v '^\s*#' | \
+			while IFS=':' read -r uid name group hash; do
+			# Add user to system
+			adduser --shell /sbin/nologin --uid "${uid}" --ingroup "${group}" --gecos '' --no-create-home --disabled-password "${name}"
+			# Add user to Samba without a password
+			smbpasswd -a -n "${name}"
+			# Set password using hash and enable user
+			pdbedit -u "${name}" --set-nt-hash "${hash}" -c "[ ]"
+		done
+	done < "${SAMBA_USERSFILE}"
+elif [ -f "${SAMBA_PASSWDFILE}" ]; then
 	# Read password file line by line
 	while read -r line; do
 		# Parse line for user information
 		printf '%s' "${line}" | grep -v '^\s*#' | \
 			while IFS=':' read -r name uid lanman nt flags mtime; do
 			# Add user to system
-			adduser --shell /sbin/nologin --uid "${uid}" --no-create-home --disabled-password "${name}"
+			adduser --shell /sbin/nologin --uid "${uid}" --ingroup 'users' --gecos '' --no-create-home --disabled-password "${name}"
 		done
 	done < "${SAMBA_PASSWDFILE}"
 	# Import password file
