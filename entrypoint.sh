@@ -8,11 +8,16 @@ if [ -f "${SAMBA_USERSFILE}" ]; then
 		printf '%s' "${line}" | grep -v '^\s*#' | \
 			while IFS=':' read -r uid name group hash; do
 			# Add user to system
-			adduser --shell /sbin/nologin --uid "${uid}" --ingroup "${group}" --gecos '' --no-create-home --disabled-password "${name}"
-			# Add user to Samba without a password
-			smbpasswd -a -n "${name}"
-			# Set password using hash and enable user
-			pdbedit -u "${name}" --set-nt-hash "${hash}" -c "[ ]"
+			grep -q -s "^${name}" /etc/passwd || \
+				adduser --shell /sbin/nologin --uid "${uid}" --ingroup "${group}" --gecos '' --no-create-home --disabled-password "${name}"
+			# Add user to Samba
+			pdbedit -L "${name}" 2>/dev/null || \
+				smbpasswd -a -n "${name}"
+			# Set password using hash
+			pdbedit -Lw "${name}" | grep -q -s "${hash}" || \
+				pdbedit -u "${name}" --set-nt-hash "${hash}"
+			# Enable user
+			pdbedit -u "${name}" -c "[ ]"
 		done
 	done < "${SAMBA_USERSFILE}"
 elif [ -f "${SAMBA_PASSWDFILE}" ]; then
@@ -22,7 +27,8 @@ elif [ -f "${SAMBA_PASSWDFILE}" ]; then
 		printf '%s' "${line}" | grep -v '^\s*#' | \
 			while IFS=':' read -r name uid lanman nt flags mtime; do
 			# Add user to system
-			adduser --shell /sbin/nologin --uid "${uid}" --ingroup 'users' --gecos '' --no-create-home --disabled-password "${name}"
+			grep -q -s "^${name}" /etc/passwd || \
+				adduser --shell /sbin/nologin --uid "${uid}" --ingroup 'users' --gecos '' --no-create-home --disabled-password "${name}"
 		done
 	done < "${SAMBA_PASSWDFILE}"
 	# Import password file
