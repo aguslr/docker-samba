@@ -15,9 +15,9 @@ if [ -f "${SAMBA_USERSFILE}" ]; then
 				smbpasswd -a -n "${name}"
 			# Set password using hash
 			pdbedit -Lw "${name}" | grep -q -s "${hash}" || \
-				pdbedit -u "${name}" --set-nt-hash "${hash}"
+				pdbedit -u "${name}" --set-nt-hash "${hash}" >/dev/null
 			# Enable user
-			pdbedit -u "${name}" -c "[ ]"
+			pdbedit -u "${name}" -c "[ ]" >/dev/null
 		done
 	done < "${SAMBA_USERSFILE}"
 elif [ -f "${SAMBA_PASSWDFILE}" ]; then
