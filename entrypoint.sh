@@ -33,7 +33,7 @@ elif [ -f "${SAMBA_PASSWDFILE}" ]; then
 	done < "${SAMBA_PASSWDFILE}"
 	# Import password file
 	pdbedit -i smbpasswd:"${SAMBA_PASSWDFILE}"
-elif [ "${SAMBA_USER}" ] && ! grep -q -s "^${SAMBA_USER}" /etc/passwd; then
+elif [ "${SAMBA_USER:=smbuser}" ] && ! grep -q -s "^${SAMBA_USER}" /etc/passwd; then
 	# Generate random password
 	[ -z "${SAMBA_PASS}" ] && \
 		SAMBA_PASS=$(date +%s | sha256sum | base64 | head -c 32) && gen_pass=1
