@@ -72,6 +72,8 @@ jobs:
       needs.check.outputs.image-needs-updating == 'true'
 
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
 
     steps:
       - name: Checkout repository
