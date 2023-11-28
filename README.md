@@ -20,7 +20,7 @@ To use *docker-samba*, follow these steps:
        docker run -p 445:445 \
          -e SAMBA_USER=bob \
          -e SAMBA_PASS=123456 \
-         -v "${PWD}"/home:/home \
+         -v ./home:/home \
          docker.io/aguslr/samba:latest
 
 2. Configure your *Samba* client software to connect to your *Samba* server's IP
@@ -99,10 +99,10 @@ Then, we can go ahead and mount it as follows:
 
     docker run -p 445:445 \
       -e SAMBA_PASSWDFILE=/tmp/smbpasswd \
-      -v "${PWD}"/smbpasswd:/tmp/smbpasswd \
-      -v "${PWD}"/data:/data \
-      -v "${PWD}"/home:/home \
-      -v "${PWD}"/smb.conf:/etc/samba/includes.conf \
+      -v ./smbpasswd:/tmp/smbpasswd \
+      -v ./data:/data \
+      -v ./home:/home \
+      -v ./smb.conf:/etc/samba/includes.conf \
       docker.io/aguslr/samba:latest
 
 
