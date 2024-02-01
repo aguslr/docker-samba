@@ -1,10 +1,13 @@
-ARG BASE_IMAGE=library/alpine:latest
+ARG BASE_IMAGE=library/debian:stable-slim
 
 FROM docker.io/${BASE_IMAGE}
 
 RUN \
-  apk add --update --no-cache samba \
-  && rm -rf /var/cache/apk/*
+  apt-get update && \
+  env DEBIAN_FRONTEND=noninteractive \
+  apt-get install -y --no-install-recommends samba samba-vfs-modules smbclient \
+  -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+  && apt-get clean && rm -rf /var/lib/apt/lists/* /var/lib/apt/lists/*
 
 COPY entrypoint.sh /entrypoint.sh
 COPY smb.conf /etc/samba/smb.conf
