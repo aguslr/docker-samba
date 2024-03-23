@@ -9,8 +9,7 @@ RUN \
   -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /var/lib/apt/lists/*
 
-COPY entrypoint.sh /entrypoint.sh
-COPY smb.conf /etc/samba/smb.conf
+COPY rootfs/ /
 
 EXPOSE 445/tcp
 
