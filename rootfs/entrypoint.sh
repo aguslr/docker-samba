@@ -12,7 +12,7 @@ if [ -f "${SAMBA_USERSFILE}" ]; then
 
 			# Add user to system
 			grep -q -s "^${name}" /etc/passwd || \
-				adduser --shell /sbin/nologin --uid "${uid}" --ingroup "${group}" --gecos '' --no-create-home --disabled-password "${name}"
+				useradd --shell /sbin/nologin --uid "${uid}" --groups "${group}" --comment '' --no-create-home "${name}"
 
 			# Add user to Samba
 			pdbedit -L "${name}" 2>/dev/null || \
@@ -40,7 +40,7 @@ elif [ -f "${SAMBA_PASSWDFILE}" ]; then
 
 			# Add user to system
 			grep -q -s "^${name}" /etc/passwd || \
-				adduser --shell /sbin/nologin --uid "${uid}" --ingroup 'users' --gecos '' --no-create-home --disabled-password "${name}"
+				useradd --shell /sbin/nologin --uid "${uid}" --groups 'users' --comment '' --no-create-home "${name}"
 
 		done
 
@@ -56,7 +56,7 @@ elif [ "${SAMBA_USER:=smbuser}" ] && ! grep -q -s "^${SAMBA_USER}" /etc/passwd; 
 		SAMBA_PASS=$(date +%s | sha256sum | base64 | head -c 32) && gen_pass=1
 
 	# Add user to system
-	adduser --shell /sbin/nologin --uid "${SAMBA_UID:-11000}" --no-create-home --disabled-password "${SAMBA_USER}"
+	useradd --shell /sbin/nologin --uid "${SAMBA_UID:-11000}" --no-create-home "${SAMBA_USER}"
 
 	# Add user to Samba
 	if printf '%s\n%s\n' "${SAMBA_PASS}" "${SAMBA_PASS}" \
